@@ -1,0 +1,70 @@
+* {
+    box-sizing: border-box;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.progress,
+.api,
+.no-api,
+.game {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 5% 15%;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 100%;
+    border: 2px solid lightgray;
+    background: beige;
+}
+
+.progress-filling {
+    height: 50px;
+    border: none;
+    background: green;
+}
+
+.btn {
+    padding: 15px 18px;
+    margin: 20px;
+    width: 15%;
+    font-size: 18px;
+    border-radius: 8px;
+    border: none;
+    color: white;
+    background: green;
+    cursor: pointer;
+}
+
+.btn:hover {
+    transition-duration: 0.3s;
+    background-color: red;
+}
+
+.text {
+    display: block;
+    text-align: center;
+}
+
+input {
+    border: none;
+    background-color: rgb(232, 233, 232);
+    height: 40px;
+    width: 45%;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: auto auto;
+}
+
+#grid {
+    margin: 0;
+    padding: 0;
+    border: none;
+    outline: 1px solid #000;
+    display: inline-block;
+}
