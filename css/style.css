@@ -91,5 +91,13 @@ input {
 #game-text {
     font-size: 25px;
     font-weight: bold;
+    text-transform: uppercase;
     margin: -10px auto 25px auto;
+}
+
+#winning-text {
+    text-align: center;
+    margin-bottom: -20px;
+    font-size: 20px;
+    color: purple;
 }

@@ -45,14 +45,21 @@ let currentPlayer;
 
 function handleClick(e) {
   const id = e.target.id;
-  console.log(id);
+  spaces.push[id];
+  console.log(spaces);
   if (!spaces[id]) {
     spaces[id] = currentPlayer;
     e.target.innerText = currentPlayer;
 
-    if (playerWon()) {
-      playText.innerText = `${currentPlayer} has won!`;
-      restart();
+    if (playerWon(currentPlayer)) {
+      const winningAlert = document.createElement("p");
+      winningAlert.setAttribute("id", "winning-text");
+      winningAlert.innerText = `${currentPlayer} HAS WON!`;
+      playText.appendChild(winningAlert);
+
+      setTimeout(() => {
+        restart();
+      }, 4000);
       return;
     }
     currentPlayer = currentPlayer === OPlayer ? XPlayer : OPlayer;
@@ -63,19 +70,19 @@ cells.forEach((cell) => {
   cell.addEventListener("click", handleClick);
 });
 
-const playerWon = () => {
-  if (spaces[0] === currentPlayer) {
-    if (spaces[1] === currentPlayer && spaces[2] === currentPlayer) return true;
-    if (spaces[3] === currentPlayer && spaces[6] === currentPlayer) return true;
-    if (spaces[4] === currentPlayer && spaces[8] === currentPlayer) return true;
+const playerWon = (player) => {
+  if (spaces[0] === player) {
+    if (spaces[1] === player && spaces[2] === player) return true;
+    if (spaces[3] === player && spaces[6] === player) return true;
+    if (spaces[4] === player && spaces[8] === player) return true;
   }
-  if (spaces[8] === currentPlayer) {
-    if (spaces[2] === currentPlayer && spaces[5] === currentPlayer) return true;
-    if (spaces[6] === currentPlayer && spaces[7] === currentPlayer) return true;
+  if (spaces[8] === player) {
+    if (spaces[2] === player && spaces[5] === player) return true;
+    if (spaces[6] === player && spaces[7] === player) return true;
   }
-  if (spaces[4] === currentPlayer) {
-    if (spaces[1] === currentPlayer && spaces[7] === currentPlayer) return true;
-    if (spaces[3] === currentPlayer && spaces[5] === currentPlayer) return true;
+  if (spaces[4] === player) {
+    if (spaces[1] === player && spaces[7] === player) return true;
+    if (spaces[3] === player && spaces[5] === player) return true;
   }
 };
 
