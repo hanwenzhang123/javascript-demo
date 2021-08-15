@@ -6,13 +6,25 @@
 .progress,
 .api,
 .no-api,
-.game {
+.game-board {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin: 5% 15%;
+    margin: 6% 15%;
 }
+
+.game {
+    display: grid;
+    grid-gap: 1px;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+hr {
+    width: 20%;
+}
+
+/* progress-bar */
 
 .progress-bar {
     height: 100%;
@@ -29,7 +41,7 @@
 
 .btn {
     padding: 15px 18px;
-    margin: 20px;
+    margin: 30px auto auto auto;
     width: 15%;
     font-size: 18px;
     border-radius: 8px;
@@ -42,7 +54,10 @@
 .btn:hover {
     transition-duration: 0.3s;
     background-color: red;
+    transform: translateY(-5px);
 }
+
+/* API */
 
 .text {
     display: block;
@@ -61,10 +76,20 @@ input {
     grid-template-columns: auto auto;
 }
 
-#grid {
-    margin: 0;
-    padding: 0;
-    border: none;
-    outline: 1px solid #000;
-    display: inline-block;
+/* GAME */
+
+.cell {
+    width: 150px;
+    height: 150px;
+    margin: 8px 8px;
+    border-radius: 15px;
+    background-color: brown;
+    text-align: center;
+    font-size: 120px;
+}
+
+#game-text {
+    font-size: 25px;
+    font-weight: bold;
+    margin: -10px auto 25px auto;
 }
