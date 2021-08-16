@@ -29,16 +29,59 @@ function updateBar() {
 }
 
 //API
-const apiInput = document.querySelector("#api");
-const pokeAPI = "https://pokeapi.co/api/v2/pokemon/?limit=70";
+const apiDiv = document.getElementsByClassName("api");
+const apiInput = document.getElementById("api");
+const pokeAPI = "https://pokeapi.co/api/v2/pokemon/?limit=151";
+
+apiInput.addEventListener("keyup", (e) => {
+  console.log(e.target.value);
+});
+
+const loadPokemon = async () => {
+  try {
+    const res = await fetch(pokeAPI);
+    let pokemon = await res.json();
+    displayPokemon(pokemon);
+    console.log(pokemon);
+  } catch (e) {
+    console.log(e);
+  }
+};
+const displayPokemon = (poke) => {
+  const characters = poke
+    .map((poke) => {
+      return `
+    <li class = "character">
+      <p>${poke.name}</p>
+    `;
+    })
+    .join("");
+  apiDiv.innerHTML(characters);
+};
+
+//NO-API
+const noApiDiv = document.getElementsByClassName("no-api");
+const noApiInput = document.getElementById("no-api");
 const options = ["CA", "AZ", "WA"];
+
+noApiInput.addEventListener("keyup", (e) => {
+  console.log(e.target.value);
+  let userInput = e.target.value;
+  let emptyArray = [];
+  if (userInput) {
+    emptyArray = options.filter((data) => {
+      return data.toLocaleUpperCase();
+    });
+    console.log(data);
+  }
+});
 
 //GAME
 const cells = document.querySelectorAll(".cell");
 const playText = document.getElementById("game-text");
 const restartBtn = document.getElementById("restart");
 
-const spaces = [];
+const spaces = [null, null, null, null, null, null, null, null, null];
 const OPlayer = "O";
 const XPlayer = "X";
 let currentPlayer;
@@ -70,21 +113,21 @@ cells.forEach((cell) => {
   cell.addEventListener("click", handleClick);
 });
 
-const playerWon = (player) => {
-  if (spaces[0] === player) {
-    if (spaces[1] === player && spaces[2] === player) return true;
-    if (spaces[3] === player && spaces[6] === player) return true;
-    if (spaces[4] === player && spaces[8] === player) return true;
-  }
-  if (spaces[8] === player) {
-    if (spaces[2] === player && spaces[5] === player) return true;
-    if (spaces[6] === player && spaces[7] === player) return true;
-  }
-  if (spaces[4] === player) {
-    if (spaces[1] === player && spaces[7] === player) return true;
-    if (spaces[3] === player && spaces[5] === player) return true;
-  }
-};
+const winningLines = [
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8],
+  [0, 4, 8],
+  [2, 4, 6],
+];
+
+function playerWon(player) {
+  const playerLine = (line) => line.every((el) => spaces[el] === player);
+  return winningLines.some((line) => playerLine(line));
+}
 
 const restart = () => {
   spaces.forEach((space, index) => {
