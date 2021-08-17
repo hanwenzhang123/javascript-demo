@@ -60,6 +60,7 @@ hr {
 /* API */
 
 .text {
+    font-size: 18px;
     display: block;
     text-align: center;
 }
@@ -74,6 +75,29 @@ input {
 .container {
     display: grid;
     grid-template-columns: auto auto;
+}
+
+#api,
+#no-api {
+    font-size: 15px;
+    padding: 2px 10px;
+}
+
+.list-group {
+    top: -30px;
+}
+
+.list-group>li {
+    width: 200px;
+    padding: 5px;
+    border: 1px solid #aaa;
+    background-color: whitesmoke;
+    text-align: center;
+    list-style: none;
+}
+
+.list-group>li:hover {
+    transform: scale(1.5);
 }
 
 /* GAME */

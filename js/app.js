@@ -5,22 +5,27 @@ btn.addEventListener("click", changeInnerHTML);
 function changeInnerHTML() {
   btn.textContent = btn.textContent === "STOP" ? "RESUME" : "STOP";
   if (btn.textContent === "RESUME") {
-    i = 0;
+    isPlaying = false;
   } else if (btn.textContent === "STOP") {
-    i = 1;
+    isPlaying = true;
   }
 }
 
-let i = 1;
+let isPlaying = true;
 updateBar();
 
 function updateBar() {
-  let filling = document.querySelector(".progress-filling");
+  const filling = document.querySelector(".progress-filling");
   let width = 0;
   let step = 1;
-  setInterval(update, 10);
+  const intervalId = setInterval(update, 10);
+
+  if (isPlaying == false && intervalId) {
+    clearInterval(intervalId);
+  }
+
   function update() {
-    if (i == 0) return;
+    if (isPlaying == false) return;
 
     width += step;
     filling.style.width = width + "%";
@@ -31,7 +36,7 @@ function updateBar() {
 //API
 const apiDiv = document.getElementsByClassName("api");
 const apiInput = document.getElementById("api");
-const pokeAPI = "https://pokeapi.co/api/v2/pokemon/?limit=151";
+const pokeAPI = "https://pokeapi.co/api/v2/pokemon/?limit=100";
 
 apiInput.addEventListener("keyup", (e) => {
   console.log(e.target.value);
@@ -60,19 +65,103 @@ const displayPokemon = (poke) => {
 };
 
 //NO-API
+const options = [
+  "AL",
+  "AK",
+  "AS",
+  "AZ",
+  "AR",
+  "CA",
+  "CO",
+  "CT",
+  "DE",
+  "DC",
+  "FM",
+  "FL",
+  "GA",
+  "GU",
+  "HI",
+  "ID",
+  "IL",
+  "IN",
+  "IA",
+  "KS",
+  "KY",
+  "LA",
+  "ME",
+  "MH",
+  "MD",
+  "MA",
+  "MI",
+  "MN",
+  "MS",
+  "MO",
+  "MT",
+  "NE",
+  "NV",
+  "NH",
+  "NJ",
+  "NM",
+  "NY",
+  "NC",
+  "ND",
+  "MP",
+  "OH",
+  "OK",
+  "OR",
+  "PW",
+  "PA",
+  "PR",
+  "RI",
+  "SC",
+  "SD",
+  "TN",
+  "TX",
+  "UT",
+  "VT",
+  "VI",
+  "VA",
+  "WA",
+  "WV",
+  "WI",
+  "WY",
+];
 const noApiDiv = document.getElementsByClassName("no-api");
 const noApiInput = document.getElementById("no-api");
-const options = ["CA", "AZ", "WA"];
+const list = document.getElementById("list");
+
+function setList(states) {
+  clearList();
+  for (const state of states) {
+    const item = document.createElement("li");
+    const text = document.createTextNode(state);
+    item.appendChild(text);
+    list.appendChild(item);
+
+    item.addEventListener("click", (e) => {
+      console.log(e.target.innerHTML);
+      noApiInput.value = `${e.target.innerHTML}`;
+    });
+  }
+}
+
+function clearList() {
+  while (list.firstChild) {
+    list.removeChild(list.firstChild);
+  }
+}
 
 noApiInput.addEventListener("keyup", (e) => {
-  console.log(e.target.value);
   let userInput = e.target.value;
-  let emptyArray = [];
   if (userInput) {
-    emptyArray = options.filter((data) => {
-      return data.toLocaleUpperCase();
-    });
-    console.log(data);
+    value = userInput.toUpperCase();
+    setList(
+      options.filter((states) => {
+        return states.includes(value);
+      })
+    );
+  } else {
+    clearList();
   }
 });
 
@@ -88,13 +177,12 @@ let currentPlayer;
 
 function handleClick(e) {
   const id = e.target.id;
-  spaces.push[id];
-  console.log(spaces);
   if (!spaces[id]) {
     spaces[id] = currentPlayer;
     e.target.innerText = currentPlayer;
 
     if (playerWon(currentPlayer)) {
+      playText.innerHTML = `GAME OVER!`;
       const winningAlert = document.createElement("p");
       winningAlert.setAttribute("id", "winning-text");
       winningAlert.innerText = `${currentPlayer} HAS WON!`;
@@ -109,11 +197,13 @@ function handleClick(e) {
   }
 }
 
-cells.forEach((cell) => {
-  cell.addEventListener("click", handleClick);
-});
+// cells.forEach((cell) => {
+//   cell.addEventListener("click", handleClick);
+// });
 
-const winningLines = [
+document.querySelector(".game").addEventListener("click", handleClick); //event delegation
+
+const winningCondition = [
   [0, 1, 2],
   [3, 4, 5],
   [6, 7, 8],
@@ -125,13 +215,12 @@ const winningLines = [
 ];
 
 function playerWon(player) {
-  const playerLine = (line) => line.every((el) => spaces[el] === player);
-  return winningLines.some((line) => playerLine(line));
+  const playerLine = (line) => line.every((step) => spaces[step] === player);
+  return winningCondition.some((line) => playerLine(line));
 }
 
 const restart = () => {
   spaces.forEach((space, index) => {
-    console.log(space);
     spaces[index] = null;
   });
   cells.forEach((cell) => {
