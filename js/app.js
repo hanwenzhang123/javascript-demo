@@ -141,6 +141,7 @@ function setList(states) {
     item.addEventListener("click", (e) => {
       console.log(e.target.innerHTML);
       noApiInput.value = `${e.target.innerHTML}`;
+      list.hidden = true;
     });
   }
 }
