@@ -34,35 +34,61 @@ function updateBar() {
 }
 
 //API
-const apiDiv = document.getElementsByClassName("api");
 const apiInput = document.getElementById("api");
+const apiList = document.getElementById("api-list");
 const pokeAPI = "https://pokeapi.co/api/v2/pokemon/?limit=100";
-
-apiInput.addEventListener("keyup", (e) => {
-  console.log(e.target.value);
-});
 
 const loadPokemon = async () => {
   try {
-    const res = await fetch(pokeAPI);
-    let pokemon = await res.json();
-    displayPokemon(pokemon);
-    console.log(pokemon);
+    const response = await fetch(pokeAPI);
+    let pokemon = await response.json();
+    pokemonNames(pokemon);
   } catch (e) {
     console.log(e);
+    return "errors";
   }
 };
-const displayPokemon = (poke) => {
-  const characters = poke
-    .map((poke) => {
-      return `
-    <li class = "character">
-      <p>${poke.name}</p>
-    `;
-    })
-    .join("");
-  apiDiv.innerHTML(characters);
+
+loadPokemon();
+
+const pokemonNames = (pokemon) => {
+  const names = pokemon.results.map((poke) => poke.name);
+  apiInput.addEventListener("keyup", (e) => {
+    let userInput = e.target.value;
+    if (userInput) {
+      value = userInput.toLowerCase();
+      displayPokemon(
+        names.filter((name) => {
+          return name.includes(value);
+        })
+      );
+    } else {
+      clearPokemon();
+    }
+  });
 };
+
+function displayPokemon(names) {
+  clearPokemon();
+  for (const name of names) {
+    const item = document.createElement("li");
+    const text = document.createTextNode(name);
+    item.appendChild(text);
+    apiList.appendChild(item);
+
+    item.addEventListener("click", (e) => {
+      apiInput.value = `${e.target.innerHTML}`;
+      apiList.hidden = true;
+    });
+    apiList.hidden = false;
+  }
+}
+
+function clearPokemon() {
+  while (apiList.firstChild) {
+    apiList.removeChild(apiList.firstChild);
+  }
+}
 
 //NO-API
 const options = [
@@ -126,11 +152,10 @@ const options = [
   "WI",
   "WY",
 ];
-const noApiDiv = document.getElementsByClassName("no-api");
-const noApiInput = document.getElementById("no-api");
+const input = document.getElementById("no-api");
 const list = document.getElementById("list");
 
-function setList(states) {
+function displayList(states) {
   clearList();
   for (const state of states) {
     const item = document.createElement("li");
@@ -139,10 +164,10 @@ function setList(states) {
     list.appendChild(item);
 
     item.addEventListener("click", (e) => {
-      console.log(e.target.innerHTML);
-      noApiInput.value = `${e.target.innerHTML}`;
+      input.value = `${e.target.innerHTML}`;
       list.hidden = true;
     });
+    list.hidden = false;
   }
 }
 
@@ -152,13 +177,13 @@ function clearList() {
   }
 }
 
-noApiInput.addEventListener("keyup", (e) => {
+input.addEventListener("keyup", (e) => {
   let userInput = e.target.value;
   if (userInput) {
-    value = userInput.toUpperCase();
-    setList(
-      options.filter((states) => {
-        return states.includes(value);
+    let value = userInput.toUpperCase();
+    displayList(
+      options.filter((state) => {
+        return state.includes(value);
       })
     );
   } else {
